@@ -647,6 +647,13 @@ export function PassportPage() {
                     ? 'Download INCOMPLETE PDF'
                     : 'Download passport PDF'}
               </Button>
+              {result && (
+                <Button asChild variant='secondary'>
+                  <Link to='/insights'>
+                    Carbon insights <ArrowRight className='size-4' />
+                  </Link>
+                </Button>
+              )}
               <Button variant='outline' onClick={() => void exportPack('csv')} disabled={exporting !== null || !result}>
                 <Download className='size-4' />
                 {exporting === 'csv' ? 'Generating…' : 'Download evidence CSV'}

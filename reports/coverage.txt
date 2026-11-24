@@ -1,9 +1,9 @@
-........................................................................ [ 69%]
-................................                                         [100%]
+........................................................................ [ 58%]
+...................................................                      [100%]
 =============================== warnings summary ===============================
-tests/test_stage5_rag_and_reporting.py::test_generate_passport_pdf
-  /usr/local/lib/python3.13/site-packages/reportlab/lib/abag.py:19: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fec2031f880>
-    self.__dict__.update(attr)
+tests/test_document_ai.py::test_parse_csv_spreadsheet
+  /usr/local/lib/python3.13/site-packages/pyarrow/vendored/version.py:424: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fe0d1d362f0>
+    @property
   Enable tracemalloc to get traceback where the object was allocated.
   See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
 
@@ -17,16 +17,17 @@ app/__init__.py                                   1      0   100%
 app/api/__init__.py                               0      0   100%
 app/api/calculation_router.py                    32     19    41%   27-70, 79-90
 app/api/document_router.py                      161      7    96%   71, 96-99, 159, 210
+app/api/insights_router.py                       71      3    96%   75, 107-108
 app/api/passport_router.py                       93      4    96%   109-110, 128-129
 app/api/registry_router.py                       33      1    97%   45
 app/api/reporting_router.py                      39      7    82%   24, 29-30, 50-51, 70-71
 app/api/workspace_router.py                     198     32    84%   160-161, 166-170, 188, 205-213, 225-226, 234, 236-237, 257-263, 276, 284-285, 294
-app/config.py                                    33      0   100%
+app/config.py                                    41      0   100%
 app/db/__init__.py                                3      0   100%
 app/db/database.py                               34      8    76%   18-22, 48, 53, 59, 63
 app/db/models.py                                314      0   100%
 app/db/seed.py                                   51      5    90%   230-233, 239
-app/main.py                                      31      6    81%   18-20, 50, 58-59
+app/main.py                                      33      6    82%   19-21, 52, 60-61
 app/modules/__init__.py                           0      0   100%
 app/modules/audit/__init__.py                     0      0   100%
 app/modules/audit/log.py                         19      0   100%
@@ -43,6 +44,9 @@ app/modules/document_ai/parser.py                74     34    54%   18-19, 38-43
 app/modules/gaps/__init__.py                      0      0   100%
 app/modules/gaps/fallbacks.py                   134      3    98%   142, 196-197
 app/modules/gaps/register.py                    177      5    97%   83, 201-204, 216-217
+app/modules/insights/__init__.py                  0      0   100%
+app/modules/insights/analysis.py                283      8    97%   185, 198, 209, 284-285, 353-354, 357
+app/modules/insights/cost.py                     45      0   100%
 app/modules/rag/__init__.py                       0      0   100%
 app/modules/rag/assistant.py                     21      1    95%   19
 app/modules/rag/indexer.py                      155     83    46%   27-28, 33-34, 55, 67-116, 121-128, 149-175, 183, 200, 202-204, 209, 213-219, 226, 248
@@ -67,5 +71,5 @@ app/schemas/rag.py                               17      0   100%
 app/schemas/registry.py                          31      0   100%
 app/schemas/workspace.py                        131      0   100%
 ---------------------------------------------------------------------------
-TOTAL                                          3723    488    87%
-104 passed, 1 warning in 16.92s
+TOTAL                                          4132    499    88%
+123 passed, 1 warning in 18.40s

@@ -24,6 +24,7 @@ import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedAllocationRouteImport } from './routes/_authenticated/allocation'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
+import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
 import { Route as AuthenticatedPassportRouteImport } from './routes/_authenticated/passport'
 import { Route as AuthenticatedReviewRouteImport } from './routes/_authenticated/review'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
@@ -118,6 +119,11 @@ const AuthenticatedAllocationRoute = AuthenticatedAllocationRouteImport.update({
 const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPassportRoute = AuthenticatedPassportRouteImport.update({
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/allocation': typeof AuthenticatedAllocationRoute
   '/assistant': typeof AuthenticatedAssistantRoute
+  '/insights': typeof AuthenticatedInsightsRoute
   '/passport': typeof AuthenticatedPassportRoute
   '/review': typeof AuthenticatedReviewRoute
   '/upload': typeof AuthenticatedUploadRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/allocation': typeof AuthenticatedAllocationRoute
   '/assistant': typeof AuthenticatedAssistantRoute
+  '/insights': typeof AuthenticatedInsightsRoute
   '/passport': typeof AuthenticatedPassportRoute
   '/review': typeof AuthenticatedReviewRoute
   '/upload': typeof AuthenticatedUploadRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/allocation': typeof AuthenticatedAllocationRoute
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
+  '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/passport': typeof AuthenticatedPassportRoute
   '/_authenticated/review': typeof AuthenticatedReviewRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/allocation'
     | '/assistant'
+    | '/insights'
     | '/passport'
     | '/review'
     | '/upload'
@@ -392,6 +402,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/allocation'
     | '/assistant'
+    | '/insights'
     | '/passport'
     | '/review'
     | '/upload'
@@ -430,6 +441,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/allocation'
     | '/_authenticated/assistant'
+    | '/_authenticated/insights'
     | '/_authenticated/passport'
     | '/_authenticated/review'
     | '/_authenticated/upload'
@@ -571,6 +583,13 @@ declare module '@tanstack/react-router' {
       path: '/assistant'
       fullPath: '/assistant'
       preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/insights': {
+      id: '/_authenticated/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof AuthenticatedInsightsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/passport': {
@@ -750,6 +769,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedAllocationRoute: typeof AuthenticatedAllocationRoute
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
+  AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedPassportRoute: typeof AuthenticatedPassportRoute
   AuthenticatedReviewRoute: typeof AuthenticatedReviewRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
@@ -767,6 +787,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedAllocationRoute: AuthenticatedAllocationRoute,
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
+  AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedPassportRoute: AuthenticatedPassportRoute,
   AuthenticatedReviewRoute: AuthenticatedReviewRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,

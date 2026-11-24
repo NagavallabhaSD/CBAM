@@ -208,3 +208,37 @@ def test_not_found_paths(api):
     assert api.post(f"{V1}/findings/999/waive", json={"reason": "r", "actor": "a"}).status_code == 404
     assert api.post(f"{V1}/documents/fields/999/approve", json={"actor": "a"}).status_code == 404
     assert api.get(f"{V1}/documents/nohash").status_code == 404
+
+
+def test_insights_api(api):
+    W = "WS-INS"
+    data = benchmark_inputs()
+    data["electricity"]["grid_ef"] = {"value": None}
+    api.put(f"{V1}/workspaces/{W}", json={"inputs": data})
+    r = api.get(f"{V1}/workspaces/{W}/insights")
+    assert r.status_code == 422 and r.json()["gaps"][0]["input_key"] == "electricity.grid_ef"
+    assert api.post(f"{V1}/workspaces/{W}/scenario", json={}).status_code == 422
+    assert api.post(f"{V1}/workspaces/{W}/cost-estimate", json={"shipment_tonnes": 1}).status_code == 422
+    api.post(f"{V1}/workspaces/{W}/gaps/electricity.grid_ef/apply-fallback",
+             json={"reason": "No supplier factor", "actor": "Harish"})
+
+    body = api.get(f"{V1}/workspaces/{W}/insights").json()
+    assert abs(body["baseline"]["see_tco2_per_t"] - 2.28507552) < 1e-9
+    assert body["baseline"]["data_quality_label"] == "B"
+    assert body["breakdown"]["items"][0]["category"] == "precursor"
+    assert [t["rank"] for t in body["tips"]][:2] == [1, 2]
+    assert body["sensitivity"]["bars"][0]["swing"] >= body["sensitivity"]["bars"][-1]["swing"]
+
+    s = api.post(f"{V1}/workspaces/{W}/scenario", json={"name": "PPA", "ppa_share_pct": 100}).json()
+    assert abs(s["tco2_saving"] - 143.2) < 1e-9
+    assert s["scenario"]["band"]["p95"] - s["scenario"]["band"]["p5"] < s["baseline"]["band"]["p95"] - s["baseline"]["band"]["p5"]
+    assert api.post(f"{V1}/workspaces/{W}/scenario", json={"fuel_switch_to": "furnace_oil"}).status_code == 400
+
+    c = api.post(f"{V1}/workspaces/{W}/cost-estimate", json={"shipment_tonnes": 25}).json()
+    assert c["label"] == "ESTIMATE" and c["inputs"]["certificate_price_eur"] == 82.32
+    assert abs(c["central"]["cost_eur"] - 2.28507552 * 25 * 82.32) < 1e-6
+    after = api.post(f"{V1}/workspaces/{W}/cost-estimate",
+                     json={"shipment_tonnes": 25, "scenario": {"name": "PPA", "ppa_share_pct": 100}}).json()
+    assert after["scenario"] == "PPA" and after["central"]["cost_eur"] < c["central"]["cost_eur"]
+    assert api.get(f"{V1}/insights/cost-parameters").json()["cbam_factor"]["2026"] == 0.975
+    assert api.get(f"{V1}/workspaces/missing/insights").status_code == 404

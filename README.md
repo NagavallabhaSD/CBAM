@@ -30,11 +30,18 @@ tests/
     unit/test_status.py          # transitions, preconditions, automatic reset to Draft
     unit/test_register.py        # immutability, versioning, 2026.1 reproducible after 2026.2
     unit/test_monte_carlo.py     # seed 42, repeatability, wider band with fallbacks
-    integration/test_api_flow.py # Incomplete -> fallback -> Draft -> User-Confirmed, PDF checks
+    unit/test_insights.py        # breakdown, scenarios, tips, tornado, cost estimate
+    integration/test_api_flow.py # Incomplete -> fallback -> Draft -> User-Confirmed, PDF, insights API
 ```
 
 The latest coverage report is saved in `reports/coverage.txt` (calculation, validation, gaps, review
 and registry modules are all above 85 %).
+
+## Priority 2: carbon insights
+
+The **Carbon insights** page adds an emissions breakdown chart, engine-calculated reduction tips, a scenario
+simulator, a sensitivity tornado chart and a CBAM certificate cost estimator (labelled as an estimate).
+See [`docs/PRIORITY2.md`](docs/PRIORITY2.md).
 
 ## Priority 1 features
 

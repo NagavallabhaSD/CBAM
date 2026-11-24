@@ -671,3 +671,149 @@ export function excludeDocument(documentHash: string, actor: string, reason: str
 export function approveField(fieldId: number, actor: string): Promise<FieldAuditWithReview> {
   return request<FieldAuditWithReview>(`/documents/fields/${fieldId}/approve`, json("POST", { actor }));
 }
+
+// =====================================================================
+// Priority 2: carbon insights. Every number is calculated by the engine.
+// =====================================================================
+
+export interface Band {
+  p5: number
+  p50: number
+  p95: number
+}
+
+export interface Snapshot {
+  see_tco2_per_t: number
+  total_tco2: number
+  band: Band
+  data_quality_label: string
+}
+
+export interface BreakdownItem {
+  key: string
+  label: string
+  category: 'fuel' | 'process' | 'electricity' | 'precursor'
+  tco2: number
+  share: number
+  see_contribution: number
+  fallback_based: boolean
+}
+
+export interface Breakdown {
+  total_tco2: number
+  see_tco2_per_t: number
+  target_production_t: number
+  items: BreakdownItem[]
+}
+
+export interface ScenarioSpec {
+  name?: string
+  electricity_cut_pct?: number
+  ppa_share_pct?: number
+  ppa_ef?: number
+  fuel_cut_pct?: number
+  fuel_switch_to?: string | null
+  precursor_see?: number | null
+  precursor_cut_pct?: number
+}
+
+export interface Tip {
+  id: string
+  rank: number
+  title: string
+  action: string
+  assumption: string
+  tco2_saving: number
+  see_saving: number
+  see_after: number
+  saving_pct: number
+  scenario: ScenarioSpec
+}
+
+export interface SensitivityBar {
+  key: string
+  label: string
+  base_value: number
+  unit: string
+  see_low: number
+  see_high: number
+  swing: number
+  note: string | null
+}
+
+export interface Insights {
+  factor_set_version: string
+  baseline: Snapshot & { mc_seed: number }
+  breakdown: Breakdown
+  tips: Tip[]
+  sensitivity: { swing_pct: number; base_see: number; bars: SensitivityBar[] }
+}
+
+export interface ScenarioResult {
+  name: string
+  changes: string[]
+  baseline: Snapshot
+  scenario: Snapshot
+  tco2_saving: number
+  see_saving: number
+  see_change_pct: number
+  breakdown: Breakdown
+}
+
+export interface CostInputs {
+  shipment_tonnes: number
+  certificate_price_eur?: number
+  year?: number
+  benchmark_tco2_per_t?: number
+  cscf?: number
+  carbon_price_paid_eur_per_t?: number
+  eur_to_inr?: number | null
+  scenario?: ScenarioSpec | null
+}
+
+export interface CostLine {
+  see_tco2_per_t: number
+  certificates_per_t: number
+  certificates: number
+  cost_per_t_eur: number
+  cost_eur: number
+  cost_inr: number | null
+}
+
+export interface CostEstimate {
+  label: 'ESTIMATE'
+  inputs: CostInputs
+  cbam_factor: number
+  free_allocation_per_t: number
+  central: CostLine
+  low: CostLine
+  high: CostLine
+  formula: string
+  disclaimer: string
+  sources: { title: string; url: string }[]
+  scenario: string | null
+}
+
+export interface CostParameters {
+  cbam_factor: Record<string, number>
+  certificate_prices: { period: string; eur_per_tco2: number; published: string }[]
+  default_price: { period: string; eur_per_tco2: number; published: string }
+  sources: { title: string; url: string }[]
+  disclaimer: string
+}
+
+export function getInsights(workspaceId: string): Promise<Insights> {
+  return request<Insights>(`/workspaces/${enc(workspaceId)}/insights`)
+}
+
+export function runScenario(workspaceId: string, spec: ScenarioSpec): Promise<ScenarioResult> {
+  return request<ScenarioResult>(`/workspaces/${enc(workspaceId)}/scenario`, json('POST', spec))
+}
+
+export function estimateCost(workspaceId: string, body: CostInputs): Promise<CostEstimate> {
+  return request<CostEstimate>(`/workspaces/${enc(workspaceId)}/cost-estimate`, json('POST', body))
+}
+
+export function getCostParameters(): Promise<CostParameters> {
+  return request<CostParameters>('/insights/cost-parameters')
+}

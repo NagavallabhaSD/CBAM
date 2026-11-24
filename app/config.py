@@ -41,6 +41,17 @@ class Settings(BaseSettings):
     MC_DEFAULT_SEED: int = 42
     MC_DEFAULT_ITERATIONS: int = 5000
 
+    # Carbon-reduction tips (Priority 2): the size of each illustrative lever.
+    # Every saving is recalculated by the engine; these only set the "what if".
+    TIP_ELECTRICITY_CUT: float = 0.10
+    TIP_PPA_SHARE: float = 0.50
+    TIP_PPA_EF: float = 0.0  # tCO2/MWh assumed for renewable PPA electricity
+    TIP_FUEL_CUT: float = 0.10
+    TIP_SUPPLIER_SEE_CUT: float = 0.20
+    TIP_PRECURSOR_YIELD: float = 0.02
+    TIP_SWITCH_TO_FUEL: str = "natural_gas"
+    SENSITIVITY_SWING: float = 0.10  # +/- 10 % one-at-a-time
+
     # Embeddings
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
 

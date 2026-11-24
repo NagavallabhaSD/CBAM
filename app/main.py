@@ -10,6 +10,7 @@ from app.api.reporting_router import router as reporting_router
 from app.api.workspace_router import router as workspace_router
 from app.api.passport_router import router as passport_router
 from app.api.registry_router import router as registry_router
+from app.api.insights_router import router as insights_router
 
 
 @asynccontextmanager
@@ -43,6 +44,7 @@ app.include_router(reporting_router, prefix=settings.API_V1_STR)
 app.include_router(workspace_router, prefix=settings.API_V1_STR)
 app.include_router(passport_router, prefix=settings.API_V1_STR)
 app.include_router(registry_router, prefix=settings.API_V1_STR)
+app.include_router(insights_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/health", tags=["System"])

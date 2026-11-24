@@ -1,4 +1,5 @@
 import {
+  Lightbulb,
   Bell,
   BookOpen,
   Building2,
@@ -57,6 +58,11 @@ export const sidebarData: SidebarData = {
           title: 'Emissions passport',
           url: '/passport',
           icon: FileCheck2,
+        },
+        {
+          title: 'Carbon insights',
+          url: '/insights',
+          icon: Lightbulb,
         },
       ],
     },
